@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Jobs. Here you can see who has applied for my jobs.</title>
+    <link rel="stylesheet" href="/static/outfit.css" />
+  </head>
+  <body>
+    {% include "header.html" %}
+    <h1>Here are the people who have applied for my job</h1>
+    <div>
+      {% for appli in applications %}
+      <div class="applicationDiv">
+        <h2>{{ appli["name"] }}</h2>
+        <p>{{ appli["email"] }}</p>
+        <p>Applied to {{ appli["position"] }}</p>
+        <p>{{ appli["cl"] }}</p>
+        <form
+          class="applicationForm"
+          action="/applications/{{ appli['id']}}"
+          method="POST"
+        >
+          <label for="nextStatus">Choose destiny for this application:</label>
+          <select id="nextStatus" name="destiny">
+            <option value="reject">Reject</option>
+            <option value="toInterview">To Interview</option>
+          </select>
+          <button type="submit">Choose destiny</button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+  </body>
+</html>

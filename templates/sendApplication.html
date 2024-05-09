@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{ job["title"] }}</title>
+    <link rel="stylesheet" href="/static/outfit.css" />
+  </head>
+  <body>
+    {% include "header.html" %}
+    <h1>Apply to {{ job["title"] }}</h1>
+    <p>{{ job["desc"] }}</p>
+    <form method="POST">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" placeholder="Testi Tane" />
+      <label for="email">Email:</label>
+      <input type="text" id="email" name="email" placeholder="testi@tane.fi" />
+      <label for="cl">Cover Letter:</label>
+      <textarea
+        id="cl"
+        name="cl"
+        placeholder="I am a wonderfull worker"
+      ></textarea>
+      <button type="submit">Send application</button>
+    </form>
+  </body>
+</html>

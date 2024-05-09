@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Jobs. Here you can see my avaible jobs</title>
+    <link rel="stylesheet" href="/static/outfit.css" />
+  </head>
+  <body>
+    {% include "header.html" %}
+    <h1>Here are our avaible jobs</h1>
+    <div>
+      {% for job in jobs %}
+      <div>
+        <h2>
+          <a href="/sendApplication/{{ job }}">{{ jobs[job]["title"] }}</a>
+        </h2>
+        <p>{{ jobs[job]["desc"] }}</p>
+        <p>Located at {{ jobs[job]["loc"] }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </body>
+</html>

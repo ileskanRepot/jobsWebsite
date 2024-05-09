@@ -1,0 +1,38 @@
+form {
+  flex-direction: column;
+  display: flex;
+}
+
+#header {
+  align-content: center;
+  justify-content: center;
+  /* height: 2em; */
+  display: flex;
+  background-color: pink;
+}
+
+#header a {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+#errorBody {
+  background-color: red;
+  color: black;
+}
+
+.applicationDiv {
+  margin-top: 1%;
+  border-style: solid;
+  border-color: black;
+  padding: 2%;
+  border-width: 1px;
+}
+
+.applicationForm {
+  margin-top: 1%;
+  border-style: dashed;
+  border-color: purple;
+  padding: 2%;
+  border-width: 1px;
+}
