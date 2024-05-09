@@ -7,6 +7,8 @@ from typing import Annotated
 import starlette.status as status
 
 from controller import controller
+from db import db
+from exception import UnknownIdException
 
 app = FastAPI()
 
@@ -26,8 +28,6 @@ def success(request: Request, successTxt: str):
 		request=request,
 		context={"successTxt": successTxt}
 	)
-
-
 
 class Applicatoin(BaseModel):
 	# position: int
@@ -57,23 +57,23 @@ async def root(request: Request):
 
 @app.get("/sendApplication/{name}")
 async def sendApplication(request: Request, name: int):
-	job = controller.getJob(name)
-	if job == None:
-		return error(request, "Wrong id")
-	return templates.TemplateResponse(
-		name="sendApplication.html",
-		request=request,
-		context={"job": job}
-	)
+	try:
+		job = controller.getJob(name)
+		return templates.TemplateResponse(
+			name="sendApplication.html",
+			request=request,
+			context={"job": job}
+		)
+	except UnknownIdException as ee:
+		return error(request, ee)
 
 @app.post("/sendApplication/{link}")
 async def sendApplication(request: Request, link:str, name: Annotated[str, Form()], email: Annotated[str, Form()], cl: Annotated[str, Form()]):
-	ret = controller.addApplication(link, name, email, cl, 0)
-
-	if ret["error"]:
-		return error(request, ret["msg"])
-	
-	return RedirectResponse("/successGetApplication", status_code=status.HTTP_302_FOUND)
+	try:
+		controller.addApplication(link, name, email, cl, 0)
+		return RedirectResponse("/successGetApplication", status_code=status.HTTP_302_FOUND)
+	except UnknownIdException as ee:
+		return error(request, ee)
 
 @app.get("/successGetApplication")
 async def successGetApplication(request: Request):
@@ -81,17 +81,34 @@ async def successGetApplication(request: Request):
 
 @app.get("/applications")
 async def applications(request: Request):
-	applications = controller.getApplications()
+	applications = controller.getApplications(-1)
 	return templates.TemplateResponse(
 		name="applications.html",
 		request=request,
-		context={ "applications": applications }
+		context={ "applications": applications, "status":"All" }
 	)
+
+
+@app.get("/applications/{id}")
+async def applications(request: Request, id:int):
+	try:
+		applications = controller.getApplications(id)
+		return templates.TemplateResponse(
+			name="applications.html",
+			request=request,
+			context={ "applications": applications, "status": db.statusIdToStr(id) }
+		)
+	except UnknownIdException as ee:
+		return error(request, ee)
+
 
 @app.post("/applications/{id}")
 async def applications(request: Request, id:int, destiny: Annotated[str, Form()]):
-	controller.desideDestiny(id, destiny)
-	return destiny
+	try:
+		print(controller.desideDestiny(id, destiny))
+		return success(request, f"Application send to { destiny }")
+	except UnknownIdException as ee:
+		return error(request, ee)
 
 @app.get("/{full_path:path}")
 async def captureRoutes(request: Request, full_path: str):

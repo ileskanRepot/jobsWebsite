@@ -7,7 +7,14 @@
   </head>
   <body>
     {% include "header.html" %}
-    <h1>Here are the people who have applied for my job</h1>
+    <div class="header">
+      <a href="/applications">All</a>
+      <a href="/applications/0">Pending rewiev</a>
+      <a href="/applications/1">To Interview</a>
+      <a href="/applications/2">Rejected</a>
+    </div>
+    <h1>Here are the people who have applied for my job.</h1>
+    <h2 class="showCurrently">{{ status }}</h2>
     <div>
       {% for appli in applications %}
       <div class="applicationDiv">
@@ -15,6 +22,8 @@
         <p>{{ appli["email"] }}</p>
         <p>Applied to {{ appli["position"] }}</p>
         <p>{{ appli["cl"] }}</p>
+        <p>{{ appli["status"] }}</p>
+        {% if appli["status"] == "Pending review" %}
         <form
           class="applicationForm"
           action="/applications/{{ appli['id']}}"
@@ -27,6 +36,7 @@
           </select>
           <button type="submit">Choose destiny</button>
         </form>
+        {% endif %}
       </div>
       {% endfor %}
     </div>

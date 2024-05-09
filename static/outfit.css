@@ -3,7 +3,8 @@ form {
   display: flex;
 }
 
-#header {
+.header {
+  margin-top: 20px;
   align-content: center;
   justify-content: center;
   /* height: 2em; */
@@ -11,7 +12,7 @@ form {
   background-color: pink;
 }
 
-#header a {
+.header a {
   margin-left: 20px;
   margin-right: 20px;
 }
@@ -35,4 +36,11 @@ form {
   border-color: purple;
   padding: 2%;
   border-width: 1px;
+}
+
+.showCurrently {
+  border-color: black;
+  border-style: solid;
+  border-width: 1px;
+  text-align: center;
 }

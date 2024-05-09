@@ -94,11 +94,15 @@ class Database:
 		self.cur.execute( "SELECT id, title FROM jobAdvertisements" )
 		return self.cur.fetchall()
 
-	def getApplications(self, status):
-		self.cur.execute( "SELECT position, name, email, coverLetter, id FROM jobApplications WHERE status = %s" ,(status,))
+	def getApplications(self):
+		self.cur.execute( "SELECT position, name, email, coverLetter, id, status FROM jobApplications" )
 		applications = self.cur.fetchall()
-		# return {appli for appli in applications}
-		return [{"position":appli[0], "name":appli[1], "email":appli[2], "cl":appli[3], "id":appli[4]} for appli in applications]
+		return [{"position":appli[0], "name":appli[1], "email":appli[2], "cl":appli[3], "id":appli[4], "status":appli[5]} for appli in applications]
+
+	def getApplicationsWithStatus(self, status):
+		self.cur.execute( "SELECT position, name, email, coverLetter, id, status FROM jobApplications WHERE status = %s" ,(status,))
+		applications = self.cur.fetchall()
+		return [{"position":appli[0], "name":appli[1], "email":appli[2], "cl":appli[3], "id":appli[4], "status":appli[5]} for appli in applications]
 
 	def getApplicationIds(self, status):
 		self.cur.execute( "SELECT id FROM jobApplications WHERE status = %s" ,(status,))
@@ -107,5 +111,31 @@ class Database:
 			return []
 		# return {appli for appli in applications}
 		return [appli[0] for appli in applications]
+
+	def disqualifyApplication(self, id):
+		self.cur.execute( 
+			"UPDATE jobApplications SET status = %s WHERE id = %s",
+			(2, id) 
+		)
+		return self.conn.commit()
+
+	def qualifyApplication(self, id):
+		self.cur.execute( 
+			"UPDATE jobApplications SET status = %s WHERE id = %s",
+			(1, id) 
+		)
+		return self.conn.commit()
+
+	def getStatusIds(self):
+		return [0,1,2]
+
+	def statusIdToStr(self, id):
+		if id == 0:
+			return "Pending review"
+		if id == 1:
+			return "Waiting for an interview"
+		if id == 2:
+			return "Rejeted"
+		return None
 
 db = Database()
