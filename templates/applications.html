@@ -23,7 +23,6 @@
         <p>Applied to {{ appli["position"] }}</p>
         <p>{{ appli["cl"] }}</p>
         <p>{{ appli["status"] }}</p>
-        {% if appli["status"] == "Pending review" %}
         <form
           class="applicationForm"
           action="/applications/{{ appli['id']}}"
@@ -31,12 +30,16 @@
         >
           <label for="nextStatus">Choose destiny for this application:</label>
           <select id="nextStatus" name="destiny">
+            {% if appli["status"] == "Pending review" %}
             <option value="reject">Reject</option>
             <option value="toInterview">To Interview</option>
+            <option value="delete">Delete</option>
+            {% else %}
+            <option value="delete">Delete</option>
+            {% endif %}
           </select>
           <button type="submit">Choose destiny</button>
         </form>
-        {% endif %}
       </div>
       {% endfor %}
     </div>

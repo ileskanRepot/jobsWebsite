@@ -50,7 +50,11 @@ class Controller():
         db.qualifyApplication(id)
 
     def desideDestiny(self, id, destiny):
-        applicationIds = db.getApplicationIds(0)
+        applicationIds = None
+        if destiny == "delete":
+            applicationIds = db.getAllApplicationIds()
+        else:
+            applicationIds = db.getApplicationIds(0)
         print(applicationIds)
         print(type(id))
 
@@ -62,6 +66,9 @@ class Controller():
             return
         if destiny == "toInterview":
             self.toInterview(id)
+            return
+        if destiny == "delete":
+            db.deleteApplication(id)
             return
 
         raise UnknownDestiny

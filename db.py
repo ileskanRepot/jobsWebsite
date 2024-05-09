@@ -112,10 +112,25 @@ class Database:
 		# return {appli for appli in applications}
 		return [appli[0] for appli in applications]
 
+	def getAllApplicationIds(self):
+		self.cur.execute( "SELECT id FROM jobApplications" )
+		applications = self.cur.fetchall()
+		if len(applications) == 0:
+			return []
+		# return {appli for appli in applications}
+		return [appli[0] for appli in applications]
+
 	def disqualifyApplication(self, id):
 		self.cur.execute( 
 			"UPDATE jobApplications SET status = %s WHERE id = %s",
 			(2, id) 
+		)
+		return self.conn.commit()
+
+	def deleteApplication(self, id):
+		self.cur.execute( 
+			"DELETE FROM jobapplications WHERE id = %s",
+			(id,) 
 		)
 		return self.conn.commit()
 
