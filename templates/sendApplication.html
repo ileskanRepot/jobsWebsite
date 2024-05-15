@@ -7,6 +7,10 @@
   </head>
   <body>
     {% include "header.html" %}
+    <p style="background-color: red">
+      Updates on job applications will only be sent to @ileska.fi email
+      addresses so that my service is not used for spamming.
+    </p>
     <h1>Apply to {{ job["title"] }}</h1>
     <p>{{ job["desc"] }}</p>
     <form method="POST">
