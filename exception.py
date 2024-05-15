@@ -1,5 +1,8 @@
 class UnknownIdException(Exception):
     pass
 
-class UnknownDestiny(Exception):
+class UnknownDestinyException(Exception):
+    pass
+
+class NotValidEmailException(Exception):
     pass
