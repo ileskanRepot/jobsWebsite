@@ -27,14 +27,14 @@ Your application was great and we would like to have a internview with you\n\nHo
         msg["Subject"] = subject
         msg.set_content(content)
 
-        asyncio.run(aiosmtplib.send(
+        aiosmtplib.send(
             msg,
             hostname=emailSecret.emailhost, 
             port=emailSecret.emailport,
             username=emailSecret.emailusername,
             password=emailSecret.emailpassword,
             use_tls=True,
-        ))
+        )
 
     def sendRejectMail(self, toWho:str):
         if not toWho.endswith("@ileska.fi"):
