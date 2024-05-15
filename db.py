@@ -86,6 +86,13 @@ class Database:
 		)
 		return self.conn.commit()
 
+	def getEmail(self, id:str):
+		self.cur.execute( "SELECT email FROM jobApplications WHERE id = %s", (id,))
+		email = self.cur.fetchall()
+		if len(email) == 0:
+			return None
+		return email[0][0]
+
 	def getAdvertisementLinks(self):
 		self.cur.execute( "SELECT id FROM jobAdvertisements" )
 		return self.cur.fetchall()
