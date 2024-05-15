@@ -1,6 +1,8 @@
 from db import db
-from exception import UnknownIdException, UnknownDestiny
+from exception import UnknownIdException, UnknownDestinyException, NotValidEmailException
+from emailSender import emailSender
 
+import re
 
 class Controller():
     def __init__(self):
@@ -11,7 +13,7 @@ class Controller():
         if not (int(link) in applicationIds):
             raise UnknownIdException("Wrong application id") 
             # return {"error": True, "msg": "Wrong application id"}
-        print(applicationIds)
+        # print(applicationIds)
         db.addApplication(link, name, email, cl, status)
         return
 
@@ -36,7 +38,7 @@ class Controller():
         else:
             applications = db.getApplicationsWithStatus(id)
         ads = {ad[0]:ad[1] for ad in db.linkAddToName()}
-        print(applications)
+        # print(applications)
         for ii in range(len(applications)):
             applications[ii]["position"] = ads[applications[ii]["position"]]
             applications[ii]["status"] = db.statusIdToStr(applications[ii]["status"])
@@ -44,6 +46,17 @@ class Controller():
         return applications
 
     def reject(self, id):
+        email = db.getEmail(id)
+        if email == None:
+            raise UnknownIdException
+
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            raise NotValidEmailException("That person did not have a email as their email")
+        if not email.endswith("@ileska.fi"):
+            raise NotValidEmailException("That person did not have a ileska.fi email")
+
+        # print("email", email)
+        emailSender.sendRejectMail(email)
         db.disqualifyApplication(id)
 
     def toInterview(self, id):
@@ -55,22 +68,22 @@ class Controller():
             applicationIds = db.getAllApplicationIds()
         else:
             applicationIds = db.getApplicationIds(0)
-        print(applicationIds)
-        print(type(id))
+        # print(applicationIds)
+        # print(type(id))
 
         if not (id in applicationIds):
             raise UnknownIdException("Wrong Id")
 
         if destiny == "reject":
             self.reject(id)
-            return
+            return True
         if destiny == "toInterview":
             self.toInterview(id)
-            return
+            return True
         if destiny == "delete":
             db.deleteApplication(id)
-            return
+            return True
 
-        raise UnknownDestiny
+        raise UnknownDestinyException
 
 controller = Controller()
