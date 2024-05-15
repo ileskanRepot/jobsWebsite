@@ -8,7 +8,7 @@ import starlette.status as status
 
 from controller import controller
 from db import db
-from exception import UnknownIdException
+from exception import UnknownIdException, NotValidEmailException
 
 app = FastAPI()
 
@@ -105,9 +105,11 @@ async def applications(request: Request, id:int):
 @app.post("/applications/{id}")
 async def applications(request: Request, id:int, destiny: Annotated[str, Form()]):
 	try:
-		print(controller.desideDestiny(id, destiny))
+		controller.desideDestiny(id, destiny)
 		return success(request, f"Application send to { destiny }")
 	except UnknownIdException as ee:
+		return error(request, ee)
+	except NotValidEmailException as ee:
 		return error(request, ee)
 
 @app.get("/{full_path:path}")
