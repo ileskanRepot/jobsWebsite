@@ -8,6 +8,7 @@
         python-keycloak
         autopep8
         aiosmtplib
+        jinja2
       ];
     in with pkgs; [
       (python311.withPackages env)
